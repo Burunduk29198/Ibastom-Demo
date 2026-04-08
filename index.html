@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBASTOM Component Demo - With Real Images</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Hebrew:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans Hebrew', 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        
+        .demo-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .demo-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .demo-header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        
+        .demo-nav {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .demo-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        
+        .demo-nav a {
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .demo-nav a:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        
+        .demo-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .demo-section h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
+        
+        .demo-section .subtitle {
+            color: #64748b;
+            margin-bottom: 40px;
+        }
+        
+        /* LISTING CARD COMPONENT */
+        .listing-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        
+        .listing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+        }
+        
+        .listing-image {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+        }
+        
+        .listing-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .listing-card:hover .listing-image img {
+            transform: scale(1.05);
+        }
+        
+        .listing-price {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            direction: ltr;
+        }
+        
+        .listing-content {
+            padding: 20px;
+        }
+        
+        .listing-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+        
+        .listing-location {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .listing-specs {
+            display: flex;
+            gap: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .listing-spec {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+        
+        .listing-spec i {
+            color: #94a3b8;
+        }
+        
+        /* ARCHIVE GRID */
+        .archive-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        @media (max-width: 1024px) {
+            .archive-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .archive-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* FILTER BAR */
+        .filter-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            min-width: 180px;
+            cursor: pointer;
+        }
+        
+        .filter-button {
+            background: #0f172a;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .filter-button:hover {
+            background: #1e293b;
+        }
+        
+        /* BREADCRUMB */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        .breadcrumb a {
+            color: #0f172a;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        /* SINGLE PRODUCT PAGE */
+        .single-product {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        
+        .product-hero {
+            position: relative;
+        }
+        
+        .product-gallery {
+            aspect-ratio: 21 / 9;
+            overflow: hidden;
+        }
+        
+        .product-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            padding: 30px;
+        }
+        
+        .product-header {
+            margin-bottom: 24px;
+        }
+        
+        .product-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 12px;
+        }
+        
+        .product-price {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #10b981;
+            direction: ltr;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        
+        .product-location {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        
+        .specs-bar {
+            display: flex;
+            gap: 40px;
+            padding: 24px 0;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+        
+        .spec-item {
+            text-align: center;
+        }
+        
+        .spec-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            direction: ltr;
+        }
+        
+        .spec-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+        
+        /* CONTENT SECTIONS */
+        .content-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .section-content {
+            color: #475569;
+            line-height: 1.8;
+        }
+        
+        /* FEATURES TABLE */
+        .features-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .features-table th,
+        .features-table td {
+            padding: 16px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .features-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .features-table tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* CONTACT SECTION */
+        .contact-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 20px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            background: #10b981;
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .contact-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .contact-value {
+            color: #0f172a;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .contact-value[dir="ltr"] {
+            direction: ltr;
+        }
+        
+        /* RELATED PROPERTIES */
+        .related-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .related-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 24px;
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        /* IMAGE GALLERY */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .gallery-main {
+            aspect-ratio: 16 / 10;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .gallery-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .gallery-thumbs {
+            display: grid;
+            grid-template-rows: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .gallery-thumb {
+            aspect-ratio: 16 / 10;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* CODE PREVIEW */
+        .code-preview {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+        
+        .code-preview pre {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .code-preview .comment { color: #64748b; }
+        .code-preview .keyword { color: #c084fc; }
+        .code-preview .string { color: #86efac; }
+        .code-preview .function { color: #60a5fa; }
+        .code-preview .variable { color: #fcd34d; }
+        
+        .component-label {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .specs-bar {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="demo-header">
+        <h1>IBASTOM Component Demo</h1>
+        <p>Visual reference with real property images — Listing card, Archive grid, and Single product templates</p>
+    </header>
+    
+    <nav class="demo-nav">
+        <ul>
+            <li><a href="#listing-card">Listing Card</a></li>
+            <li><a href="#archive-grid">Archive Grid</a></li>
+            <li><a href="#single-product">Single Product</a></li>
+            <li><a href="#code-preview">Code Preview</a></li>
+        </ul>
+    </nav>
+    
+    <!-- LISTING CARD SECTION -->
+    <section class="demo-section" id="listing-card">
+        <span class="component-label">COMPONENT 1</span>
+        <h2>Listing Card</h2>
+        <p class="subtitle">Reusable template part with fixed 16:9 ratio and RTL support</p>
+        
+        <div class="grid-2">
+            <div>
+                <div class="listing-card">
+                    <div class="listing-image">
+                        <img src="images/property1.jpg" alt="דירה ברחובות">
+                        <div class="listing-price">₪2,500,000</div>
+                    </div>
+                    <div class="listing-content">
+                        <h3 class="listing-title">דירת 4 חדרים משופצת ברחובות הצעירה</h3>
+                        <div class="listing-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            רחובות, מרכז
+                        </div>
+                        <div class="listing-specs">
+                            <div class="listing-spec">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span dir="ltr">120 מ"ר</span>
+                            </div>
+                            <div class="listing-spec">
+                                <i class="fas fa-door-open"></i>
+                                <span>4 חדרים</span>
+                            </div>
+                            <div class="listing-spec">
+                                <i class="fas fa-car"></i>
+                                <span dir="ltr">2 חניות</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 style="margin-bottom: 16px; color: #0f172a;">Key Features</h3>
+                <ul style="list-style: none;">
+                    <li style="padding: 12px; background: #f0fdf4; border-radius: 8px; margin-bottom: 12px;">
+                        <i class="fas fa-check-circle" style="color: #10b981; margin-left: 8px;"></i>
+                        <strong>Fixed 16:9 aspect ratio</strong> — No layout jumps
+                    </li>
+                    <li style="padding: 12px; background: #eff6ff; border-radius: 8px; margin-bottom: 12px;">
+                        <i class="fas fa-check-circle" style="color: #3b82f6; margin-left: 8px;"></i>
+                        <strong>Price with LTR direction</strong> — ₪2,500,000 reads correctly
+                    </li>
+                    <li style="padding: 12px; background: #faf5ff; border-radius: 8px; margin-bottom: 12px;">
+                        <i class="fas fa-check-circle" style="color: #a855f7; margin-left: 8px;"></i>
+                        <strong>Hover zoom effect</strong> — Image scales on hover
+                    </li>
+                    <li style="padding: 12px; background: #fff7ed; border-radius: 8px;">
+                        <i class="fas fa-check-circle" style="color: #f97316; margin-left: 8px;"></i>
+                        <strong>Consistent spacing</strong> — 24px grid gap rhythm
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ARCHIVE GRID SECTION -->
+    <section class="demo-section" id="archive-grid" style="background: #f1f5f9;">
+        <span class="component-label">COMPONENT 2</span>
+        <h2>Archive Grid</h2>
+        <p class="subtitle">City-level archive with filter bar and listing card grid</p>
+        
+        <div class="breadcrumb">
+            <a href="#">דף הבית</a>
+            <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
+            <a href="#">מרכז</a>
+            <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
+            <span>רחובות</span>
+        </div>
+        
+        <div class="filter-bar">
+            <select class="filter-select">
+                <option>כל האזורים</option>
+                <option>מרכז</option>
+                <option>צפון</option>
+                <option>דרום</option>
+            </select>
+            <select class="filter-select">
+                <option>כל הערים</option>
+                <option>רחובות</option>
+                <option>פתח תקווה</option>
+                <option>תל אביב</option>
+            </select>
+            <select class="filter-select">
+                <option>סוג נכס</option>
+                <option>מגורים</option>
+                <option>מסחרי</option>
+                <option>משרדים</option>
+            </select>
+            <button class="filter-button">סנן תוצאות</button>
+        </div>
+        
+        <div class="archive-grid">
+            <div class="listing-card">
+                <div class="listing-image">
+                    <img src="images/property1.jpg" alt="דירה ברחובות">
+                    <div class="listing-price">₪2,500,000</div>
+                </div>
+                <div class="listing-content">
+                    <h3 class="listing-title">דירת 4 חדרים משופצת ברחובות הצעירה</h3>
+                    <div class="listing-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        רחובות, מרכז
+                    </div>
+                    <div class="listing-specs">
+                        <div class="listing-spec">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span dir="ltr">120 מ"ר</span>
+                        </div>
+                        <div class="listing-spec">
+                            <i class="fas fa-door-open"></i>
+                            <span>4 חדרים</span>
+                        </div>
+                        <div class="listing-spec">
+                            <i class="fas fa-car"></i>
+                            <span dir="ltr">2 חניות</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="listing-card">
+                <div class="listing-image">
+                    <img src="images/property2.jpg" alt="משרדים בפתח תקווה">
+                    <div class="listing-price">₪1,850,000</div>
+                </div>
+                <div class="listing-content">
+                    <h3 class="listing-title">משרדים להשכרה במרכז העיר</h3>
+                    <div class="listing-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        פתח תקווה, מרכז
+                    </div>
+                    <div class="listing-specs">
+                        <div class="listing-spec">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span dir="ltr">200 מ"ר</span>
+                        </div>
+                        <div class="listing-spec">
+                            <i class="fas fa-door-open"></i>
+                            <span>4 חדרים</span>
+                        </div>
+                        <div class="listing-spec">
+                            <i class="fas fa-car"></i>
+                            <span dir="ltr">6 חניות</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="listing-card">
+                <div class="listing-image">
+                    <img src="images/property3.jpg" alt="מתחם מגורים">
+                    <div class="listing-price">₪3,200,000</div>
+                </div>
+                <div class="listing-content">
+                    <h3 class="listing-title">דירת 5 חדרים בפרויקט חדש</h3>
+                    <div class="listing-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ראשון לציון, מרכז
+                    </div>
+                    <div class="listing-specs">
+                        <div class="listing-spec">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span dir="ltr">150 מ"ר</span>
+                        </div>
+                        <div class="listing-spec">
+                            <i class="fas fa-door-open"></i>
+                            <span>5 חדרים</span>
+                        </div>
+                        <div class="listing-spec">
+                            <i class="fas fa-car"></i>
+                            <span dir="ltr">3 חניות</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- SINGLE PRODUCT SECTION -->
+    <section class="demo-section" id="single-product">
+        <span class="component-label">COMPONENT 3</span>
+        <h2>Single Product Page</h2>
+        <p class="subtitle">Individual listing with gallery, specs, content sections, and contact</p>
+        
+        <div class="single-product">
+            <div class="product-hero">
+                <div class="image-gallery">
+                    <div class="gallery-main">
+                        <img src="images/interior1.jpg" alt="סלון הדירה">
+                    </div>
+                    <div class="gallery-thumbs">
+                        <div class="gallery-thumb">
+                            <img src="images/interior2.jpg" alt="מטבח">
+                        </div>
+                        <div class="gallery-thumb">
+                            <img src="images/interior3.jpg" alt="חדר שינה">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <div class="breadcrumb">
+                    <a href="#">דף הבית</a>
+                    <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
+                    <a href="#">מרכז</a>
+                    <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
+                    <a href="#">רחובות</a>
+                    <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
+                    <span>מגורים</span>
+                </div>
+                
+                <div class="product-header">
+                    <h1 class="product-title">דירת 4 חדרים משופצת ברחובות הצעירה</h1>
+                    <div class="product-price">₪2,500,000</div>
+                    <div class="product-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        רחוב הרצל 45, רחובות, מרכז
+                    </div>
+                </div>
+                
+                <div class="specs-bar">
+                    <div class="spec-item">
+                        <div class="spec-value">120</div>
+                        <div class="spec-label">מ"ר</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">4</div>
+                        <div class="spec-label">חדרים</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">2</div>
+                        <div class="spec-label">חניות</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">3</div>
+                        <div class="spec-label">קומה</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">2018</div>
+                        <div class="spec-label">שנת בנייה</div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <h2 class="section-title">אודות הנכס</h2>
+                    <div class="section-content">
+                        <p>דירת 4 חדרים משופצת ברחובות הצעירה, קומה גבוהה עם נוף פתוח. הדירה כוללת סלון מרווח, 3 חדרי שינה, מטבח מאובזר ו-2 חדרי אמבטיה.</p>
+                        <p style="margin-top: 16px;">הנכס ממוקם בסמוך לגני ילדים, בתי ספר, מרכזי קניות ותחבורה ציבורית. חניה צמודה ומחסן כלולים במחיר.</p>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <h2 class="section-title">מאפיינים</h2>
+                    <table class="features-table">
+                        <thead>
+                            <tr>
+                                <th>מאפיין</th>
+                                <th>פרטים</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>שטח כולל</td>
+                                <td dir="ltr">120 מ"ר</td>
+                            </tr>
+                            <tr>
+                                <td>מספר חדרים</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>מיזוג אוויר</td>
+                                <td>בכל חדר</td>
+                            </tr>
+                            <tr>
+                                <td>חניה</td>
+                                <td dir="ltr">2 מקומות צמודים</td>
+                            </tr>
+                            <tr>
+                                <td>ממ"ד</td>
+                                <td>כן</td>
+                            </tr>
+                            <tr>
+                                <td>מעלית</td>
+                                <td>כן</td>
+                            </tr>
+                            <tr>
+                                <td>מרפסת</td>
+                                <td>12 מ"ר</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="contact-section">
+                    <h2 class="section-title" style="border-bottom: none; margin-bottom: 0;">פרטי יצירת קשר</h2>
+                    <div class="contact-grid">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <div class="contact-label">איש קשר</div>
+                                <div class="contact-value">ישראל ישראלי</div>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <div class="contact-label">טלפון</div>
+                                <div class="contact-value" dir="ltr">050-123-4567</div>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <div class="contact-label">וואטסאפ</div>
+                                <div class="contact-value" dir="ltr">050-123-4567</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="related-section">
+            <h2 class="related-title">נכסים דומים</h2>
+            <div class="related-grid">
+                <div class="listing-card">
+                    <div class="listing-image">
+                        <img src="images/property2.jpg" alt="משרדים">
+                        <div class="listing-price">₪1,850,000</div>
+                    </div>
+                    <div class="listing-content">
+                        <h3 class="listing-title">משרדים להשכרה במרכז העיר</h3>
+                        <div class="listing-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            פתח תקווה, מרכז
+                        </div>
+                        <div class="listing-specs">
+                            <div class="listing-spec">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span dir="ltr">200 מ"ר</span>
+                            </div>
+                            <div class="listing-spec">
+                                <i class="fas fa-door-open"></i>
+                                <span>4 חדרים</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="listing-card">
+                    <div class="listing-image">
+                        <img src="images/property3.jpg" alt="מתחם מגורים">
+                        <div class="listing-price">₪3,200,000</div>
+                    </div>
+                    <div class="listing-content">
+                        <h3 class="listing-title">דירת 5 חדרים בפרויקט חדש</h3>
+                        <div class="listing-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ראשון לציון, מרכז
+                        </div>
+                        <div class="listing-specs">
+                            <div class="listing-spec">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span dir="ltr">150 מ"ר</span>
+                            </div>
+                            <div class="listing-spec">
+                                <i class="fas fa-door-open"></i>
+                                <span>5 חדרים</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="listing-card">
+                    <div class="listing-image">
+                        <img src="images/property1.jpg" alt="דירה נוספת">
+                        <div class="listing-price">₪2,100,000</div>
+                    </div>
+                    <div class="listing-content">
+                        <h3 class="listing-title">דירת 3 חדרים משופצת</h3>
+                        <div class="listing-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            רחובות, מרכז
+                        </div>
+                        <div class="listing-specs">
+                            <div class="listing-spec">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span dir="ltr">90 מ"ר</span>
+                            </div>
+                            <div class="listing-spec">
+                                <i class="fas fa-door-open"></i>
+                                <span>3 חדרים</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CODE PREVIEW SECTION -->
+    <section class="demo-section" id="code-preview" style="background: #f1f5f9;">
+        <span class="component-label">IMPLEMENTATION</span>
+        <h2>Code Preview</h2>
+        <p class="subtitle">Clean PHP templates with ACF integration</p>
+        
+        <div class="code-preview">
+            <pre><span class="comment">// Listing Card Component - template-parts/listing-card.php</span>
+<span class="keyword">&lt;div</span> <span class="variable">class</span>=<span class="string">"listing-card"</span><span class="keyword">&gt;</span>
+    <span class="keyword">&lt;div</span> <span class="variable">class</span>=<span class="string">"listing-image"</span><span class="keyword">&gt;</span>
+        <span class="keyword">&lt;?php</span> <span class="function">the_post_thumbnail</span>(<span class="string">'large'</span>, [<span class="string">'style'</span> =&gt; <span class="string">'aspect-ratio: 16/9'</span>]); <span class="keyword">?&gt;</span>
+        <span class="keyword">&lt;div</span> <span class="variable">class</span>=<span class="string">"listing-price"</span> <span class="variable">dir</span>=<span class="string">"ltr"</span><span class="keyword">&gt;</span>
+            ₪<span class="keyword">&lt;?php</span> <span class="function">echo</span> <span class="function">number_format</span>(<span class="function">get_field</span>(<span class="string">'re_listing_price'</span>)); <span class="keyword">?&gt;</span>
+        <span class="keyword">&lt;/div&gt;</span>
+    <span class="keyword">&lt;/div&gt;</span>
+    <span class="keyword">&lt;div</span> <span class="variable">class</span>=<span class="string">"listing-content"</span><span class="keyword">&gt;</span>
+        <span class="keyword">&lt;h3&gt;&lt;?php</span> <span class="function">the_title</span>(); <span class="keyword">?&gt;&lt;/h3&gt;</span>
+        <span class="keyword">&lt;div</span> <span class="variable">class</span>=<span class="string">"listing-specs"</span><span class="keyword">&gt;</span>
+            <span class="keyword">&lt;span</span> <span class="variable">dir</span>=<span class="string">"ltr"</span><span class="keyword">&gt;&lt;?php</span> <span class="function">echo</span> <span class="function">get_field</span>(<span class="string">'re_property_size_sqm'</span>); <span class="keyword">?&gt;</span> מ"ר<span class="keyword">&lt;/span&gt;</span>
+        <span class="keyword">&lt;/div&gt;</span>
+    <span class="keyword">&lt;/div&gt;</span>
+<span class="keyword">&lt;/div&gt;</span>
+
+<span class="comment">// ACF Flexible Content Loop - single-product.php</span>
+<span class="keyword">&lt;?php</span> <span class="keyword">if</span> (<span class="function">have_rows</span>(<span class="string">'re_content_sections'</span>)): <span class="keyword">?&gt;</span>
+    <span class="keyword">&lt;?php</span> <span class="keyword">while</span> (<span class="function">have_rows</span>(<span class="string">'re_content_sections'</span>)): <span class="function">the_row</span>(); <span class="keyword">?&gt;</span>
+        <span class="keyword">&lt;?php</span> <span class="keyword">if</span> (<span class="function">get_row_layout</span>() == <span class="string">'features_table'</span>): <span class="keyword">?&gt;</span>
+            <span class="keyword">&lt;?php</span> <span class="function">get_template_part</span>(<span class="string">'template-parts/sections/features-table'</span>); <span class="keyword">?&gt;</span>
+        <span class="keyword">&lt;?php</span> <span class="keyword">elseif</span> (<span class="function">get_row_layout</span>() == <span class="string">'pricing_block'</span>): <span class="keyword">?&gt;</span>
+            <span class="keyword">&lt;?php</span> <span class="function">get_template_part</span>(<span class="string">'template-parts/sections/pricing-block'</span>); <span class="keyword">?&gt;</span>
+        <span class="keyword">&lt;?php</span> <span class="keyword">endif</span>; <span class="keyword">?&gt;</span>
+    <span class="keyword">&lt;?php</span> <span class="keyword">endwhile</span>; <span class="keyword">?&gt;</span>
+<span class="keyword">&lt;?php</span> <span class="keyword">endif</span>; <span class="keyword">?&gt;</span></pre>
+        </div>
+    </section>
+    
+    <footer style="background: #0f172a; color: white; padding: 40px 20px; text-align: center;">
+        <p style="color: #94a3b8; margin-bottom: 10px;">IBASTOM Real Estate Catalog Demo</p>
+        <p style="font-size: 0.9rem; color: #64748b;">Built with PHP Templates + ACF + Hebrew RTL Support</p>
+    </footer>
+</body>
+</html>
